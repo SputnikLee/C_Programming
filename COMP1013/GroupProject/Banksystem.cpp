@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-
+#include <stdlib.h>
+#include "Banksystem.h"
 //The Following function is to upload the latest data of all the accounts
 void Upload(int acci, struct theAccount *p) {
     int i;
@@ -17,7 +17,7 @@ void Upload(int acci, struct theAccount *p) {
 }
 
 //To check whether the account and the password are match
-int islogin(int acci, struct theAccount *p) {
+int islogin(int acci, struct theAccount *p, int *isAccount) {
     char login[10], pass[10];
     int i;
     printf("Please input your account: \n");
@@ -28,7 +28,7 @@ int islogin(int acci, struct theAccount *p) {
             scanf("%s", pass);
             if (strcmp(pass, p[i].accountpass) == 0) {
                 //printf("You have %.2lf in your account\n",p->accountmoney);
-                isAccount = i;
+                *isAccount = i;
                 //printf("This is %d\n", isAccount);
                 return 1;
                 //Both the account and the password are correct
@@ -47,7 +47,7 @@ int islogin(int acci, struct theAccount *p) {
 }
 
 //Function to inquiry the money that this account has
-void Inquiry(int acci, struct theAccount *p) {
+void Inquiry(int acci, struct theAccount *p, int isAccount) {
 
     printf("\t\t|$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$|\n");
     printf("\t\t|                                               |\n");
@@ -67,7 +67,7 @@ void Inquiry(int acci, struct theAccount *p) {
 }
 
 //Function is for the account to save money into the bank
-void Save(int acci, struct theAccount *p) {
+void Save(int acci, struct theAccount *p, int isAccount) {
     double insave;
     printf("\nYou have %.2lf $ in your account.\n", p[isAccount].accountmoney);
     printf("\nInput the amount of saving into the account:\n");
@@ -90,7 +90,7 @@ void Save(int acci, struct theAccount *p) {
 }
 
 //Function to withdraw from an account
-void Withdraw(int acci, struct theAccount *p) {
+void Withdraw(int acci, struct theAccount *p, int isAccount) {
     double takeOut, limit;
 
     printf("\n\nHi, %s", p[isAccount].accountname);
@@ -126,7 +126,7 @@ void Withdraw(int acci, struct theAccount *p) {
 
 }
 
-void Transfer(int acci, struct theAccount *p) {
+void Transfer(int acci, struct theAccount *p, int isAccount) {
     char receiver[20];
     int x, limit;
     double trans, charge;
@@ -186,9 +186,9 @@ void Quit() {
 }
 
 //The welcome page
-void function_list(int acci, struct theAccount *p) {
+void function_list(int acci, struct theAccount *p, int isAccount) {
     int i = 0;
-
+    int ord;
     do {
 
         printf("\t\t|$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$|\n");
@@ -214,16 +214,20 @@ void function_list(int acci, struct theAccount *p) {
         switch (i) {
 
             case 1:
-                Inquiry(acci, p);
+                ord = isAccount;
+                Inquiry(acci, p, ord);
                 break;
             case 2:
-                Save(acci, p);
+                ord = isAccount;
+                Save(acci, p, ord);
                 break;
             case 3:
-                Withdraw(acci, p);
+                ord = isAccount;
+                Withdraw(acci, p, ord);
                 break;
             case 4:
-                Transfer(acci, p);
+                ord = isAccount;
+                Transfer(acci, p, ord);
                 break;
             case 5:
                 Upload(acci, p);
@@ -238,4 +242,5 @@ void function_list(int acci, struct theAccount *p) {
 
     } while (1);
 }
+
 
